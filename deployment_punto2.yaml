@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aks-dl-deployment
+spec:
+  selector:
+    matchLabels:
+      app: aks-dl
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: aks-dl
+    spec:
+     containers:
+     - name: dockerdl-aks
+       image: juancortesr/dockerdl_aks:latest
+       imagePullPolicy: Always
+       ports:
+       - containerPort: 8080

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocr-flask-app-deployment
+  labels:
+    app: ocr-flask-app
+spec:
+  replicas: 2  # Ajusta el número de réplicas según tus necesidades
+  selector:
+    matchLabels:
+      app: ocr-flask-app
+  template:
+    metadata:
+      labels:
+        app: ocr-flask-app
+    spec:
+      containers:
+      - name: ocr-flask-app
+        image: juancortesr/ocr-flask-app:latest
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        env:
+        - name: FLASK_ENV
+          value: "production"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ocr-flask-app-service
+spec:
+  selector:
+    app: ocr-flask-app
+  type: LoadBalancer  # Crea un servicio tipo LoadBalancer para exposición externa
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
